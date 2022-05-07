@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { ProducersService } from './producers.service';
 import { CreateProducerDto } from './dto/create-producer.dto';
@@ -21,7 +22,8 @@ export class ProducersController {
   }
 
   @Get()
-  findAll() {
+  find(@Query('name') name: string) {
+    if (name) return this.producersService.findByName(name);
     return this.producersService.findAll();
   }
 

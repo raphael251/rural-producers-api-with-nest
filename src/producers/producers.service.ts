@@ -67,7 +67,10 @@ export class ProducersService {
   }
 
   findByName(name: string) {
-    return `implement find by name: ${name}`;
+    return this.producersRepository
+      .createQueryBuilder('producer')
+      .where('producer.name LIKE :name', { name: `%${name}%` })
+      .getMany();
   }
 
   findOne(id: number) {
