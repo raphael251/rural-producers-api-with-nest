@@ -5,8 +5,8 @@
 - [Objetivo Geral](#objetivo-geral)
 - [Requisitos de Negócio](#requisitos-de-negócio)
 - [Requisitos técnicos](#requisitos-técnicos)
-- [Exemplo de requisição de cadastro](#exemplo-de-requisição-de-cadastro)
 - [Rodando o projeto](#rodando-o-projeto)
+- [Exemplo de payload da requisição de cadastro](#exemplo-de-payload-da-requisição-de-cadastro)
 
 ## Objetivo Geral
 
@@ -35,9 +35,13 @@ Essa API tem como objetivo fornecer um cadastro de produtor rural com os seguint
   - Total de fazendas por cultura.
   - Total de fazendas por uso de solo (Área agricultável e vegetação)
 
-## Requisitos técnicos
+## Tecnologias Utilizadas
 
-- O back-end deve salvar os dados em um banco de dados Postgres usando o NodeJS como layer de Backend, e entregar os endpoints para cadastrar, editar, e excluir produtores rurais, além do endpoint que retorne os totais para o dashboard.
+Para a construção dessa aplicação utilizei o framework [NestJS](https://docs.nestjs.com/) que ajuda na construção de aplicações server-side como essa API. Usei muitos recursos interessantes que o framework tem a oferecer, onde caso fosse criar tudo "na unha", levaria muito mais tempo e é algo que sempre se repete em novos projetos.
+
+Citando as features do framework que foram usadas, temos a utilização dos decorators que auxiliam na definição de módulos, controllers e rotas. Também existe integração entre outras libs muito bem feitas do Node que tem compatibilidade com o Typescript, como a **class-validator** para validações de dados de entrada nos endpoints ou em outros pontos do código se for necessário ou a **TypeORM** que faz o mapeamento do dados relacionais do banco de dados para objetos Javascript.
+
+O banco de dados utilizado foi o PostgreSQL, que foi configurado para ser executado através do Docker Compose em um container.
 
 ## Rodando o projeto
 
@@ -51,14 +55,14 @@ Então rode o comando `npm run start` e já pode começar a fazer requisições 
 
 - producers
   - POST /producers
-  - GET /producers[?name=<nome-do-produtor>]
+  - GET /producers[?name=nome-do-produtor]
   - GET /producers/:id
   - PATCH /producers/:id
   - DELETE /producers/:id
 - dashboard
   - GET /dashboard
 
-## Exemplo de requisição de cadastro
+## Exemplo de payload da requisição de cadastro de um produtor
 
 ```jsonc
 {
@@ -82,6 +86,6 @@ Então rode o comando `npm run start` e já pode começar a fazer requisições 
         "Café",
         "Cana de Açúcar"
     ]
-}
+  }
 }
 ```
