@@ -45,6 +45,6 @@ export class ProducerStateInitialsValidation
     return statesInitials.includes(value);
   }
   defaultMessage?(validationArguments?: ValidationArguments): string {
-    return `document.cpf must be a valid CPF number`;
+    return `stateInitials must be a valid brazilian UF`;
   }
 }

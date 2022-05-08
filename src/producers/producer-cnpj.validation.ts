@@ -14,6 +14,6 @@ export class ProducerCnpjValidation implements ValidatorConstraintInterface {
     return cnpj.isValid(value);
   }
   defaultMessage?(validationArguments?: ValidationArguments): string {
-    return `document.cpf must be a valid CPF number`;
+    return `document.cnpj must be a valid CNPJ number`;
   }
 }
