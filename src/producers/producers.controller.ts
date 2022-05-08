@@ -11,7 +11,7 @@ import {
 import { ProducersService } from './producers.service';
 import { CreateProducerDto } from './dto/create-producer.dto';
 import { UpdateProducerDto } from './dto/update-producer.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('producers')
 @Controller('producers')
@@ -24,7 +24,8 @@ export class ProducersController {
   }
 
   @Get()
-  find(@Query('name') name: string) {
+  @ApiQuery({ name: 'name', required: false })
+  find(@Query('name') name?: string) {
     if (name) return this.producersService.findByName(name);
     return this.producersService.findAll();
   }
