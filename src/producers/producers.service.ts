@@ -34,15 +34,14 @@ export class ProducersService {
       );
 
     const producer = new Producer();
-    const cropsPlanted = createProducerDto.cropsPlanted.map(
-      (crop: CropType) => {
-        const cropPlanted = new ProducerCropPlanted();
-        cropPlanted.cropPlanted = crop;
-        return cropPlanted;
-      },
-    );
 
-    for (const cropPlanted of cropsPlanted) {
+    const cropsPlanted: Array<ProducerCropPlanted> = [];
+
+    for (const crop of createProducerDto.cropsPlanted) {
+      const cropPlanted = new ProducerCropPlanted();
+      cropPlanted.cropPlanted = crop;
+      cropsPlanted.push(cropPlanted);
+
       await this.producersCropPlantedRepository.save(cropPlanted);
     }
 
@@ -98,14 +97,23 @@ export class ProducersService {
         'the sum of arable and vegetation areas should not be greater than total area',
       );
 
-    // this.producersRepository.update(id, {
-    //   ...updateProducerDto,
-    //   totalArea: currentTotalArea,
-    //   arableArea: currentArableArea,
-    //   vegetationArea: currentVegetationArea,
-    // });
+    currentProducer.name = updateProducerDto.name || currentProducer.name;
 
-    return `this service should update producer, ${updateProducerDto}`;
+    currentProducer.documentType =
+      updateProducerDto.document.type || currentProducer.documentType;
+
+    currentProducer.documentValue =
+      updateProducerDto.document[updateProducerDto.document.type] ||
+      currentProducer.documentValue;
+
+    currentProducer.farmName =
+      updateProducerDto.farmName || currentProducer.farmName;
+
+    currentProducer.totalArea = currentTotalArea;
+    currentProducer.arableArea = currentArableArea;
+    currentProducer.arableArea = currentVegetationArea;
+
+    return this.producersRepository.save(currentProducer);
   }
 
   async remove(id: number) {

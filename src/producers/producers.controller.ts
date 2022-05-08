@@ -11,7 +11,9 @@ import {
 import { ProducersService } from './producers.service';
 import { CreateProducerDto } from './dto/create-producer.dto';
 import { UpdateProducerDto } from './dto/update-producer.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('producers')
 @Controller('producers')
 export class ProducersController {
   constructor(private readonly producersService: ProducersService) {}
