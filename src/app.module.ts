@@ -1,7 +1,5 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { Producer } from './producers/entities/producer.entity';
 import { ProducersModule } from './producers/producers.module';
 import 'dotenv/config';
@@ -20,7 +18,7 @@ import { ProducerCropPlanted } from './producers/entities/producer-crop-planted.
       synchronize: true,
     }),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
