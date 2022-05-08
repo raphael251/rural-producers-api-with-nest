@@ -1,5 +1,4 @@
 import {
-  ValidationArguments,
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
@@ -7,13 +6,10 @@ import { cnpj } from 'cpf-cnpj-validator';
 
 @ValidatorConstraint({ async: false })
 export class ProducerCnpjValidation implements ValidatorConstraintInterface {
-  validate(
-    value: string,
-    validationArguments?: ValidationArguments,
-  ): boolean | Promise<boolean> {
+  validate(value: string): boolean | Promise<boolean> {
     return cnpj.isValid(value);
   }
-  defaultMessage?(validationArguments?: ValidationArguments): string {
+  defaultMessage?(): string {
     return `document.cnpj must be a valid CNPJ number`;
   }
 }

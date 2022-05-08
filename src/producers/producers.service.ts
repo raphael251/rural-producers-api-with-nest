@@ -1,7 +1,5 @@
 import {
   BadRequestException,
-  HttpException,
-  HttpStatus,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -9,10 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateProducerDto } from './dto/create-producer.dto';
 import { UpdateProducerDto } from './dto/update-producer.dto';
-import {
-  CropType,
-  ProducerCropPlanted,
-} from './entities/producer-crop-planted.entity';
+import { ProducerCropPlanted } from './entities/producer-crop-planted.entity';
 import { Producer } from './entities/producer.entity';
 
 @Injectable()

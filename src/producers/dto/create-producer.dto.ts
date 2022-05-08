@@ -1,7 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
-  isArray,
   IsIn,
   IsNotEmpty,
   Length,
@@ -11,9 +10,9 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { CropType } from '../entities/producer-crop-planted.entity';
-import { ProducerCnpjValidation } from '../producer-cnpj.validation';
-import { ProducerCpfValidation } from '../producer-cpf.validation';
-import { ProducerStateInitialsValidation } from '../producer-state-initials.validation';
+import { ProducerCnpjValidation } from '../validation/producer-cnpj.validation';
+import { ProducerCpfValidation } from '../validation/producer-cpf.validation';
+import { ProducerStateInitialsValidation } from '../validation/producer-state-initials.validation';
 
 export class ProducerDocumentDto {
   @IsNotEmpty()

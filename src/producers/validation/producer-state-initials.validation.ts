@@ -1,18 +1,13 @@
 import {
-  ValidationArguments,
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
-import { cpf } from 'cpf-cnpj-validator';
 
 @ValidatorConstraint({ async: false })
 export class ProducerStateInitialsValidation
   implements ValidatorConstraintInterface
 {
-  validate(
-    value: string,
-    validationArguments?: ValidationArguments,
-  ): boolean | Promise<boolean> {
+  validate(value: string): boolean | Promise<boolean> {
     const statesInitials = [
       'AC',
       'AL',
@@ -44,7 +39,7 @@ export class ProducerStateInitialsValidation
     ];
     return statesInitials.includes(value);
   }
-  defaultMessage?(validationArguments?: ValidationArguments): string {
+  defaultMessage?(): string {
     return `stateInitials must be a valid brazilian UF`;
   }
 }
