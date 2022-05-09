@@ -18,6 +18,11 @@ import { ApiQuery, ApiTags } from '@nestjs/swagger';
 export class ProducersController {
   constructor(private readonly producersService: ProducersService) {}
 
+  @Get('/dashboard')
+  async dashboard() {
+    return this.producersService.getDashboardData();
+  }
+
   @Post()
   async create(@Body() createProducerDto: CreateProducerDto) {
     return this.producersService.create(createProducerDto);

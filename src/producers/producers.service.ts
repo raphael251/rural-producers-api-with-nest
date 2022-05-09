@@ -145,4 +145,23 @@ export class ProducersService {
     await this.producersCropPlantedRepository.delete({ producer: { id } });
     return this.producersRepository.delete(id);
   }
+
+  async getDashboardData() {
+    const { farmsTotalHectares } = await this.producersRepository
+      .createQueryBuilder('producer')
+      .select('SUM(producer.totalArea)', 'farmsTotalHectares')
+      .getRawOne();
+
+    const farmsByState = await this.producersRepository
+      .createQueryBuilder('producer')
+      .select('producer.stateInitials, COUNT(producer.stateInitials)')
+      .groupBy('producer.stateInitials')
+      .getRawMany();
+
+    return {
+      farmsTotalQuatity: await this.producersRepository.count(),
+      farmsTotalHectares: parseFloat(Number(farmsTotalHectares).toFixed(2)),
+      farmsByState: farmsByState,
+    };
+  }
 }
