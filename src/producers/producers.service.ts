@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateProducerDto } from './dto/create-producer.dto';
@@ -78,7 +74,8 @@ export class ProducersService {
       relations: ['cropsPlanted'],
     });
 
-    if (!currentProducer) return new NotFoundException('Producer not found');
+    if (!currentProducer)
+      return new BadRequestException('The passed id must be a valid one');
 
     const currentTotalArea =
       updateProducerDto.totalArea || currentProducer.totalArea;
@@ -104,9 +101,42 @@ export class ProducersService {
     currentProducer.farmName =
       updateProducerDto.farmName || currentProducer.farmName;
 
+    currentProducer.city = updateProducerDto.city || currentProducer.city;
+
+    currentProducer.stateInitials =
+      updateProducerDto.stateInitials || currentProducer.stateInitials;
+
     currentProducer.totalArea = currentTotalArea;
     currentProducer.arableArea = currentArableArea;
     currentProducer.arableArea = currentVegetationArea;
+
+    if (
+      updateProducerDto.cropsPlanted.length >
+      currentProducer.cropsPlanted.length
+    ) {
+      const newCropsToAdd = updateProducerDto.cropsPlanted.filter(
+        (crop) =>
+          !currentProducer.cropsPlanted.find((el) => el.cropPlanted === crop),
+      );
+
+      for (const crop of newCropsToAdd) {
+        const cropPlanted = new ProducerCropPlanted();
+        cropPlanted.cropPlanted = crop;
+        await this.producersCropPlantedRepository.save(cropPlanted);
+        currentProducer.cropsPlanted.push(cropPlanted);
+      }
+    }
+
+    if (
+      updateProducerDto.cropsPlanted.length <
+      currentProducer.cropsPlanted.length
+    ) {
+      currentProducer.cropsPlanted.forEach((crop, index) => {
+        if (updateProducerDto.cropsPlanted.indexOf(crop.cropPlanted) === -1) {
+          currentProducer.cropsPlanted.splice(index, 1);
+        }
+      });
+    }
 
     return this.producersRepository.save(currentProducer);
   }

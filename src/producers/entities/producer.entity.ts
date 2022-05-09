@@ -35,6 +35,8 @@ export class Producer {
   @Column('float')
   vegetationArea: number;
 
-  @OneToMany(() => ProducerCropPlanted, (cropPlanted) => cropPlanted.producer)
+  @OneToMany(() => ProducerCropPlanted, (cropPlanted) => cropPlanted.producer, {
+    cascade: true,
+  })
   cropsPlanted: ProducerCropPlanted[];
 }
