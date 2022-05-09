@@ -4,8 +4,10 @@
 
 - [Objetivo Geral](#objetivo-geral)
 - [Requisitos de Negócio](#requisitos-de-negócio)
-- [Requisitos técnicos](#requisitos-técnicos)
+- [Tecnologias Utilizadas](#tecnologias-utilizadas)
 - [Rodando o projeto](#rodando-o-projeto)
+- [Documentação da API (Swagger)](#documentação-da-api-swagger)
+- [Rotas da API](#rotas-da-api)
 - [Exemplo de payload da requisição de cadastro](#exemplo-de-payload-da-requisição-de-cadastro)
 
 ## Objetivo Geral
@@ -51,6 +53,10 @@ Após a subida do banco, duplique o arquivo `.env.example` e renomeie para `.env
 
 Então rode o comando `npm run start` e já pode começar a fazer requisições para a API
 
+## Documentação da API (Swagger)
+
+Também foi criada uma versão inicial da documentação da API com o Swagger que poderá ser acessada na rota `/producers/dashboard`.
+
 ## Rotas da API
 
 - producers
@@ -59,8 +65,7 @@ Então rode o comando `npm run start` e já pode começar a fazer requisições 
   - GET /producers/:id
   - PATCH /producers/:id
   - DELETE /producers/:id
-- dashboard
-  - GET /dashboard
+  - GET /producers/dashboard
 
 ## Exemplo de payload da requisição de cadastro de um produtor
 
