@@ -1,5 +1,6 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { BusinessError } from 'src/errors/business.error';
 import { Repository } from 'typeorm';
 import { CreateProducerDto } from './dto/create-producer.dto';
 import { UpdateProducerDto } from './dto/update-producer.dto';
@@ -15,12 +16,12 @@ export class ProducersService {
     private producersCropPlantedRepository: Repository<ProducerCropPlanted>,
   ) {}
 
-  async create(createProducerDto: CreateProducerDto) {
+  async create(createProducerDto: CreateProducerDto): Promise<Producer> {
     if (
       createProducerDto.arableArea + createProducerDto.vegetationArea >
       createProducerDto.totalArea
     )
-      return new BadRequestException(
+      throw new BusinessError(
         'the sum of arable and vegetation areas should not be greater than total area',
       );
 
@@ -75,7 +76,7 @@ export class ProducersService {
     });
 
     if (!currentProducer)
-      return new BadRequestException('The passed id must be a valid one');
+      throw new BusinessError('The passed id must be a valid one');
 
     const currentTotalArea =
       updateProducerDto.totalArea || currentProducer.totalArea;
@@ -85,7 +86,7 @@ export class ProducersService {
       updateProducerDto.vegetationArea || currentProducer.vegetationArea;
 
     if (currentArableArea + currentVegetationArea > currentTotalArea)
-      return new BadRequestException(
+      throw new BusinessError(
         'the sum of arable and vegetation areas should not be greater than total area',
       );
 
