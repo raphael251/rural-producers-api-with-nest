@@ -33,8 +33,6 @@ export class ProducersService {
       const cropPlanted = new ProducerCropPlanted();
       cropPlanted.cropPlanted = crop;
       cropsPlanted.push(cropPlanted);
-
-      await this.producersCropPlantedRepository.save(cropPlanted);
     }
 
     const documentType = createProducerDto.document.type;
@@ -111,32 +109,17 @@ export class ProducersService {
     currentProducer.arableArea = currentArableArea;
     currentProducer.arableArea = currentVegetationArea;
 
-    if (
-      updateProducerDto.cropsPlanted.length >
-      currentProducer.cropsPlanted.length
-    ) {
-      const newCropsToAdd = updateProducerDto.cropsPlanted.filter(
-        (crop) =>
-          !currentProducer.cropsPlanted.find((el) => el.cropPlanted === crop),
-      );
+    if (updateProducerDto.cropsPlanted) {
+      const newCropsPlanted: Array<ProducerCropPlanted> = [];
 
-      for (const crop of newCropsToAdd) {
+      for (const crop of updateProducerDto.cropsPlanted) {
         const cropPlanted = new ProducerCropPlanted();
-        cropPlanted.cropPlanted = crop;
-        await this.producersCropPlantedRepository.save(cropPlanted);
-        currentProducer.cropsPlanted.push(cropPlanted);
-      }
-    }
 
-    if (
-      updateProducerDto.cropsPlanted.length <
-      currentProducer.cropsPlanted.length
-    ) {
-      currentProducer.cropsPlanted.forEach((crop, index) => {
-        if (updateProducerDto.cropsPlanted.indexOf(crop.cropPlanted) === -1) {
-          currentProducer.cropsPlanted.splice(index, 1);
-        }
-      });
+        cropPlanted.cropPlanted = crop;
+        newCropsPlanted.push(cropPlanted);
+      }
+
+      currentProducer.cropsPlanted = newCropsPlanted;
     }
 
     return this.producersRepository.save(currentProducer);
