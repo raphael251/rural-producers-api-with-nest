@@ -1,96 +1,72 @@
 # API - Rural Producers
 
-## Tabela de Conteúdo
+## Table of Content
 
-- [Objetivo Geral](#objetivo-geral)
-- [Requisitos de Negócio](#requisitos-de-negócio)
-- [Tecnologias Utilizadas](#tecnologias-utilizadas)
-- [Rodando o projeto](#rodando-o-projeto)
-- [Documentação da API (Swagger)](#documentação-da-api-swagger)
-- [Rotas da API](#rotas-da-api)
-- [Exemplo de payload da requisição de cadastro](#exemplo-de-payload-da-requisição-de-cadastro)
+- [General Description](#general-description)
+- [Business Requirements](#business-requirements)
+- [Technologies](#technologies)
+- [Running the Project](#running-the-project)
+- [API Docs (Swagger)](#api-docs-swagger)
+- [API Routes](#api-routes)
+- [API Collection (Postman)](#api-collection-postman)
 
-## Objetivo Geral
+## General Description
 
-Essa API tem como objetivo fornecer um cadastro de produtor rural com os seguintes dados:
+The main objective of this API is to provide a way of registering brazilian rural producers through the following data:
 
-1.  CPF ou CNPJ
-2.  Nome do produtor
-3.  Nome da Fazenda
-4.  Cidade
-5.  Estado
-6.  Área total em hectares da fazenda
-7.  Área agricultável em hectares
-8.  Área de vegetação em hectares
-9.  Culturas plantadas (Soja, Milho, Algodão, Café, Cana de Açucar)
+1.  CPF or CNPJ
+2.  Producer name
+3.  Farm name
+4.  City
+5.  State
+6.  Farm total area in hectares
+7.  Farm arable area in hectares
+8.  Farm vegetation area in hectares
+9.  Crops planted (soybean, corn, cotton, coffee, sugar cane)
 
-## Requisitos de negócio
+## Business Requirements
 
-- O usuário deverá ter a possibilidade de cadastrar, editar, e excluir produtores rurais.
-- O sistema deverá validar CPF e CNPJ digitados incorretamente.
-- A soma de área agrícultável e vegetação, não deverá ser maior que a área total da fazenda
-- Cada produtor pode plantar mais de uma cultura em sua Fazenda.
-- Deve existir um endpoint que retorna:
-  - Total de fazendas em quantidade
-  - Total de fazendas em hectares (área total)
-  - Total de fazendas por estado.
-  - Total de fazendas por cultura.
-  - Total de fazendas por uso de solo (Área agricultável e vegetação)
+- The user should be able to create, read, update and delete rural producers.
+- The system should validate the documents of the user (CPF and CNPJ).
+- The sum of the arable and vegetation area should not be greater than the farm's total area.
+- Each producer can plant more than one crop on his farm.
+- There must be an endpoint that returns:
+  - Total number of farms (quantity)
+  - Total area of all farms.
+  - Total number of farms by state.
+  - Total number of farms by crop.
+  - Total number of farms by land use (arable and vegetation area)
 
-## Tecnologias Utilizadas
+## Technologies
 
-Para a construção dessa aplicação utilizei o framework [NestJS](https://docs.nestjs.com/) que ajuda na construção de aplicações server-side como essa API. Usei muitos recursos interessantes que o framework tem a oferecer, onde caso fosse criar tudo "na unha", levaria muito mais tempo e é algo que sempre se repete em novos projetos.
+For this application I used the [NestJS](https://docs.nestjs.com/) framework that helps on the creation of server-side applications like this. I used a lot of interesting tools that the framework offers, where if I had to create by hand, I would take much more time and effort, besides the fact that developers have to do these kinds of things in every new project.
 
-Citando as features do framework que foram usadas, temos a utilização dos decorators que auxiliam na definição de módulos, controllers e rotas. Também existe integração entre outras libs muito bem feitas do Node que tem compatibilidade com o Typescript, como a **class-validator** para validações de dados de entrada nos endpoints ou em outros pontos do código se for necessário ou a **TypeORM** que faz o mapeamento do dados relacionais do banco de dados para objetos Javascript.
+I used some good features from this framework, like the decorators that helped me in the definitions of the modules, controllers and routes. I also used the integration of the framework with another libs like the **class-validator** for data validation (in the request body or other places in the code) or the **TypeORM** which maps relational database data to Javascript objects.
 
-O banco de dados utilizado foi o PostgreSQL, que foi configurado para ser executado através do Docker Compose em um container.
+The chosen database was the PostgreSQL, which was configured to run through Docker Compose in a container and also has an easy way of integration with the services classes through the Nest dependency injection mechanism.
 
-## Rodando o projeto
+## Running the Project
 
-Antes de rodar o projeto, é necessário rodar o comando `docker-compose up -d` para subir o banco de dados (você vai precisar do Docker e Docker Compose instalados).
+Before running the project, its necessary to run the command `docker-compose up -d` to set up the database (you will need Docker and Docker Compose installed).
 
-Após a subida do banco, duplique o arquivo `.env.example` e renomeie para `.env`
+After that, duplicate the `.env.example` file and rename it to `.env`.
 
-Então rode o comando `npm run start` e já pode começar a fazer requisições para a API
+Then run the command `npm run start` and then you can start making requests to the API.
 
-## Documentação da API (Swagger)
+## API Docs (Swagger)
 
-Também foi criada uma versão inicial da documentação da API com o Swagger que poderá ser acessada na rota `/producers/dashboard`.
+The initial version of the Swagger API docs is available in the following route: `/producers/dashboard`.
 
-## Rotas da API
+## API Routes
 
 - producers
   - POST /producers
-  - GET /producers[?name=nome-do-produtor]
+  - GET /producers[?name=producer-name]
   - GET /producers/:id
   - PATCH /producers/:id
   - DELETE /producers/:id
   - GET /producers/dashboard
 
-## Exemplo de payload da requisição de cadastro de um produtor
+## API Collection (Postman)
 
-```jsonc
-{
-  {
-    "name": "Bruce Lee",
-    "document": {
-        "type": "cpf", // ou "cnpj"
-        "cpf": "44433322211"
-        // "cnpj": "44333222000155"
-    },
-    "farmName": "Fazenda Feliz",
-    "city": "São Paulo",
-    "stateInitials": "SP",
-    "totalArea": 50.08,
-    "arableArea": 25.02,
-    "vegetationArea": 24.20,
-    "cropsPlanted": [
-        "Soja",
-        "Milho",
-        "Algodão",
-        "Café",
-        "Cana de Açúcar"
-    ]
-  }
-}
-```
+A Postman Collection is available in this repo on the _docs_ folder.
