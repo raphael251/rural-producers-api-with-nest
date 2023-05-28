@@ -7,17 +7,14 @@ import {
   Param,
   Delete,
   Query,
-  UseInterceptors,
 } from '@nestjs/common';
 import { ProducersService } from './producers.service';
 import { CreateProducerDto } from './dto/create-producer.dto';
 import { UpdateProducerDto } from './dto/update-producer.dto';
 import { ApiQuery, ApiTags } from '@nestjs/swagger';
-import { BusinessErrorInterceptor } from './business-error.interceptor';
 
 @ApiTags('producers')
 @Controller('producers')
-@UseInterceptors(BusinessErrorInterceptor)
 export class ProducersController {
   constructor(private readonly producersService: ProducersService) {}
 
