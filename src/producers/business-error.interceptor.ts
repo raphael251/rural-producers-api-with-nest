@@ -6,7 +6,7 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 import { catchError, Observable } from 'rxjs';
-import { BusinessError } from 'src/errors/business.error';
+import { BusinessError } from '../errors/business.error';
 
 @Injectable()
 export class BusinessErrorInterceptor implements NestInterceptor {

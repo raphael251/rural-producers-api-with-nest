@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { BusinessError } from 'src/errors/business.error';
 import { Repository } from 'typeorm';
 import { CreateProducerDto } from './dto/create-producer.dto';
 import { UpdateProducerDto } from './dto/update-producer.dto';
 import { ProducerCropPlanted } from './entities/producer-crop-planted.entity';
 import { Producer } from './entities/producer.entity';
+import { BusinessError } from '../errors/business.error';
 
 @Injectable()
 export class ProducersService {
