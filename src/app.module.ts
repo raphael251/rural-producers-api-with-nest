@@ -4,6 +4,9 @@ import { Producer } from './producers/entities/producer.entity';
 import { ProducersModule } from './producers/producers.module';
 import 'dotenv/config';
 import { ProducerCropPlanted } from './producers/entities/producer-crop-planted.entity';
+import { UsersModule } from './users/users.module';
+import { User } from './users/entites/user.entity';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -14,9 +17,11 @@ import { ProducerCropPlanted } from './producers/entities/producer-crop-planted.
       port: parseInt(process.env.DB_PORT),
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
-      entities: [Producer, ProducerCropPlanted],
+      entities: [User, Producer, ProducerCropPlanted],
       synchronize: true,
     }),
+    UsersModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
