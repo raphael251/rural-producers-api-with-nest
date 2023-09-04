@@ -12,40 +12,26 @@ export class ProducersService {
     @InjectRepository(Producer)
     private producersRepository: Repository<Producer>,
     @InjectRepository(ProducerCropPlanted)
-    private producersCropPlantedRepository: Repository<ProducerCropPlanted>,
+    private cropPlantedRepository: Repository<ProducerCropPlanted>,
   ) {}
 
-  async create(createProducerDto: CreateProducerDto): Promise<Producer> {
+  async create(producerDto: CreateProducerDto): Promise<Producer> {
     if (
-      createProducerDto.arableArea + createProducerDto.vegetationArea >
-      createProducerDto.totalArea
+      producerDto.arableArea + producerDto.vegetationArea >
+      producerDto.totalArea
     )
       throw new BadRequestException(
         'the sum of arable and vegetation areas should not be greater than total area',
       );
 
-    const producer = new Producer();
-
-    const cropsPlanted: Array<ProducerCropPlanted> = [];
-
-    for (const crop of createProducerDto.cropsPlanted) {
-      const cropPlanted = new ProducerCropPlanted();
-      cropPlanted.cropPlanted = crop;
-      cropsPlanted.push(cropPlanted);
-    }
-
-    const documentType = createProducerDto.document.type;
-    producer.documentType = documentType;
-    producer.documentValue = createProducerDto.document[documentType];
-
-    producer.name = createProducerDto.name;
-    producer.farmName = createProducerDto.farmName;
-    producer.city = createProducerDto.city;
-    producer.stateInitials = createProducerDto.stateInitials;
-    producer.totalArea = createProducerDto.totalArea;
-    producer.arableArea = createProducerDto.arableArea;
-    producer.vegetationArea = createProducerDto.vegetationArea;
-    producer.cropsPlanted = cropsPlanted;
+    const producer: Producer = this.producersRepository.create({
+      ...producerDto,
+      cropsPlanted: producerDto.cropsPlanted.map((cropPlanted) =>
+        this.cropPlantedRepository.create({ cropPlanted }),
+      ),
+      documentType: producerDto.document.type,
+      documentValue: producerDto.document[producerDto.document.type],
+    });
 
     return this.producersRepository.save(producer);
   }
@@ -54,21 +40,24 @@ export class ProducersService {
     return this.producersRepository.find({ relations: ['cropsPlanted'] });
   }
 
-  findByName(name: string) {
+  findByName(name: string): Promise<Array<Producer>> {
     return this.producersRepository
       .createQueryBuilder('producer')
       .where('producer.name LIKE :name', { name: `%${name}%` })
       .getMany();
   }
 
-  findOne(id: number) {
+  findOne(id: number): Promise<Producer> {
     return this.producersRepository.findOne(id, {
       relations: ['cropsPlanted'],
     });
   }
 
-  async update(id: number, updateProducerDto: UpdateProducerDto) {
-    const currentProducer = await this.producersRepository.findOne(id, {
+  async update(
+    id: number,
+    updateProducerDto: UpdateProducerDto,
+  ): Promise<Producer> {
+    let currentProducer = await this.producersRepository.findOne(id, {
       relations: ['cropsPlanted'],
     });
 
@@ -87,36 +76,28 @@ export class ProducersService {
         'the sum of arable and vegetation areas should not be greater than total area',
       );
 
-    currentProducer.name = updateProducerDto.name || currentProducer.name;
-
-    currentProducer.documentType =
-      updateProducerDto.document.type || currentProducer.documentType;
-
-    currentProducer.documentValue =
-      updateProducerDto.document[updateProducerDto.document.type] ||
-      currentProducer.documentValue;
-
-    currentProducer.farmName =
-      updateProducerDto.farmName || currentProducer.farmName;
-
-    currentProducer.city = updateProducerDto.city || currentProducer.city;
-
-    currentProducer.stateInitials =
-      updateProducerDto.stateInitials || currentProducer.stateInitials;
-
-    currentProducer.totalArea = currentTotalArea;
-    currentProducer.arableArea = currentArableArea;
-    currentProducer.arableArea = currentVegetationArea;
+    currentProducer = {
+      ...currentProducer,
+      name: updateProducerDto.name || currentProducer.name,
+      documentType:
+        updateProducerDto.document.type || currentProducer.documentType,
+      documentValue:
+        updateProducerDto.document[updateProducerDto.document.type] ||
+        currentProducer.documentValue,
+      farmName: updateProducerDto.farmName || currentProducer.farmName,
+      city: updateProducerDto.city || currentProducer.city,
+      stateInitials:
+        updateProducerDto.stateInitials || currentProducer.stateInitials,
+      totalArea: currentTotalArea,
+      arableArea: currentArableArea,
+      vegetationArea: currentVegetationArea,
+    };
 
     if (updateProducerDto.cropsPlanted) {
-      const newCropsPlanted: Array<ProducerCropPlanted> = [];
-
-      for (const crop of updateProducerDto.cropsPlanted) {
-        const cropPlanted = new ProducerCropPlanted();
-
-        cropPlanted.cropPlanted = crop;
-        newCropsPlanted.push(cropPlanted);
-      }
+      const newCropsPlanted: Array<ProducerCropPlanted> =
+        updateProducerDto.cropsPlanted.map((cropPlanted) =>
+          this.cropPlantedRepository.create({ cropPlanted }),
+        );
 
       currentProducer.cropsPlanted = newCropsPlanted;
     }
@@ -125,7 +106,7 @@ export class ProducersService {
   }
 
   async remove(id: number) {
-    await this.producersCropPlantedRepository.delete({ producer: { id } });
+    await this.cropPlantedRepository.delete({ producer: { id } });
     return this.producersRepository.delete(id);
   }
 
