@@ -10,6 +10,7 @@ async function bootstrap() {
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Producers API')
+    .addBearerAuth()
     .setDescription('Create and manage your producers easily')
     .setVersion('1.0')
     .addTag('producers')

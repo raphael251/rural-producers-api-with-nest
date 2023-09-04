@@ -12,10 +12,11 @@ import {
 import { ProducersService } from './producers.service';
 import { CreateProducerDto } from './dto/create-producer.dto';
 import { UpdateProducerDto } from './dto/update-producer.dto';
-import { ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '../auth/auth.guard';
 
 @ApiTags('producers')
+@ApiBearerAuth()
 @Controller('producers')
 export class ProducersController {
   constructor(private readonly producersService: ProducersService) {}
