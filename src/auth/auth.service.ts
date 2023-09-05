@@ -34,7 +34,7 @@ export class AuthService {
   async signIn(email: string, password: string): Promise<any> {
     const user = await this.usersService.findOneByEmail(email);
 
-    if (!user) throw new BadRequestException('Invalid e-mail or password.1');
+    if (!user) throw new BadRequestException('Invalid e-mail or password.');
 
     const isThePasswordCorrect = await this.hashingService.compare(
       password,
@@ -42,7 +42,7 @@ export class AuthService {
     );
 
     if (!isThePasswordCorrect)
-      throw new BadRequestException('Invalid e-mail or password.2');
+      throw new BadRequestException('Invalid e-mail or password.');
 
     const payload = { sub: user.id, email: user.email };
 

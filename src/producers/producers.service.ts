@@ -21,7 +21,7 @@ export class ProducersService {
       producerDto.totalArea
     )
       throw new BadRequestException(
-        'the sum of arable and vegetation areas should not be greater than total area',
+        'The sum of arable and vegetation areas should not be greater than total area.',
       );
 
     const producer: Producer = this.producersRepository.create({
@@ -62,7 +62,7 @@ export class ProducersService {
     });
 
     if (!currentProducer)
-      throw new BadRequestException('The passed id must be a valid one');
+      throw new BadRequestException('The passed id must be a valid one.');
 
     const currentTotalArea =
       updateProducerDto.totalArea || currentProducer.totalArea;
@@ -73,7 +73,7 @@ export class ProducersService {
 
     if (currentArableArea + currentVegetationArea > currentTotalArea)
       throw new BadRequestException(
-        'the sum of arable and vegetation areas should not be greater than total area',
+        'The sum of arable and vegetation areas should not be greater than total area.',
       );
 
     const documentType =
