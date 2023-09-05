@@ -76,14 +76,17 @@ export class ProducersService {
         'the sum of arable and vegetation areas should not be greater than total area',
       );
 
+    const documentType =
+      updateProducerDto.document?.type || currentProducer.documentType;
+    const documentValue = updateProducerDto.document?.type
+      ? updateProducerDto.document[documentType]
+      : currentProducer.documentValue;
+
     currentProducer = {
       ...currentProducer,
       name: updateProducerDto.name || currentProducer.name,
-      documentType:
-        updateProducerDto.document.type || currentProducer.documentType,
-      documentValue:
-        updateProducerDto.document[updateProducerDto.document.type] ||
-        currentProducer.documentValue,
+      documentType,
+      documentValue,
       farmName: updateProducerDto.farmName || currentProducer.farmName,
       city: updateProducerDto.city || currentProducer.city,
       stateInitials:

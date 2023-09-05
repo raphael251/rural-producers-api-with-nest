@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsIn,
@@ -6,34 +6,11 @@ import {
   Length,
   MaxLength,
   Validate,
-  ValidateIf,
   ValidateNested,
 } from 'class-validator';
 import { CropType } from '../entities/producer-crop-planted.entity';
-import { ProducerCnpjValidation } from '../validation/producer-cnpj.validation';
-import { ProducerCpfValidation } from '../validation/producer-cpf.validation';
 import { ProducerStateInitialsValidation } from '../validation/producer-state-initials.validation';
-
-export class ProducerDocumentDto {
-  @IsNotEmpty()
-  @IsIn(['cpf', 'cnpj'])
-  @ApiProperty({ enum: ['cpf', 'cnpj'] })
-  type: 'cpf' | 'cnpj';
-
-  @ValidateIf((doc: ProducerDocumentDto) => doc.type === 'cpf')
-  @IsNotEmpty()
-  @Length(11, 11)
-  @Validate(ProducerCpfValidation)
-  @ApiPropertyOptional()
-  cpf?: string;
-
-  @ValidateIf((o: ProducerDocumentDto) => o.type === 'cnpj')
-  @IsNotEmpty()
-  @Length(14, 14)
-  @Validate(ProducerCnpjValidation)
-  @ApiPropertyOptional()
-  cnpj?: string;
-}
+import { ProducerDocumentDto } from './producer-document.dto';
 
 export class CreateProducerDto {
   @IsNotEmpty()
@@ -74,7 +51,7 @@ export class CreateProducerDto {
   vegetationArea: number;
 
   @IsNotEmpty()
-  @IsIn(['Soja', 'Milho', 'Algodão', 'Café', 'Cana de Açúcar'], { each: true })
+  @IsIn(Object.values(CropType), { each: true })
   @ApiProperty({
     enum: CropType,
     isArray: true,
