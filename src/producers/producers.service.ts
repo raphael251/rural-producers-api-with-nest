@@ -1,6 +1,11 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { CreateProducerDto } from './dto/create-producer.dto';
 import { UpdateProducerDto } from './dto/update-producer.dto';
 import { ProducerCropPlanted } from './entities/producer-crop-planted.entity';
@@ -108,9 +113,22 @@ export class ProducersService {
     return this.producersRepository.save(currentProducer);
   }
 
-  async remove(id: string) {
-    await this.cropPlantedRepository.delete({ producer: { id } });
-    return this.producersRepository.delete(id);
+  async deleteOneById(id: string) {
+    const foundProducer = this.producersRepository.findOne(id);
+
+    if (!foundProducer) throw new NotFoundException('Producer not found.');
+
+    const transactionResult =
+      await this.cropPlantedRepository.manager.transaction<DeleteResult>(
+        async (transactionalEntityManager) => {
+          await transactionalEntityManager.delete(ProducerCropPlanted, {
+            producer: { id },
+          });
+          return transactionalEntityManager.delete(Producer, id);
+        },
+      );
+
+    if (transactionResult.affected === 0) throw new ConflictException();
   }
 
   async getDashboardData() {

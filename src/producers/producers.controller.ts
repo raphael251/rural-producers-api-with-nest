@@ -15,6 +15,7 @@ import { UpdateProducerDto } from './dto/update-producer.dto';
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '../auth/auth.guard';
 import { IdParamDTO } from './dto/id-param.dto';
+import { Producer } from './entities/producer.entity';
 
 @ApiTags('producers')
 @ApiBearerAuth()
@@ -29,19 +30,21 @@ export class ProducersController {
   }
 
   @Post()
-  async create(@Body() createProducerDto: CreateProducerDto) {
+  async create(
+    @Body() createProducerDto: CreateProducerDto,
+  ): Promise<Producer> {
     return this.producersService.create(createProducerDto);
   }
 
   @Get()
   @ApiQuery({ name: 'name', required: false })
-  find(@Query('name') name?: string) {
+  findAll(@Query('name') name?: string): Promise<Array<Producer>> {
     if (name) return this.producersService.findByName(name);
     return this.producersService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param() { id }: IdParamDTO) {
+  findOne(@Param() { id }: IdParamDTO): Promise<Producer> {
     return this.producersService.findOne(id);
   }
 
@@ -49,12 +52,12 @@ export class ProducersController {
   update(
     @Param() { id }: IdParamDTO,
     @Body() updateProducerDto: UpdateProducerDto,
-  ) {
+  ): Promise<Producer> {
     return this.producersService.update(id, updateProducerDto);
   }
 
   @Delete(':id')
-  remove(@Param() { id }: IdParamDTO) {
-    return this.producersService.remove(id);
+  remove(@Param() { id }: IdParamDTO): Promise<void> {
+    return this.producersService.deleteOneById(id);
   }
 }
