@@ -14,6 +14,7 @@ import { CreateProducerDto } from './dto/create-producer.dto';
 import { UpdateProducerDto } from './dto/update-producer.dto';
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '../auth/auth.guard';
+import { IdParamDTO } from './dto/id-param.dto';
 
 @ApiTags('producers')
 @ApiBearerAuth()
@@ -43,14 +44,14 @@ export class ProducersController {
 
   @UseGuards(AuthGuard)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.producersService.findOne(+id);
+  findOne(@Param() { id }: IdParamDTO) {
+    return this.producersService.findOne(id);
   }
 
   @UseGuards(AuthGuard)
   @Patch(':id')
   update(
-    @Param('id') id: number,
+    @Param() { id }: IdParamDTO,
     @Body() updateProducerDto: UpdateProducerDto,
   ) {
     return this.producersService.update(id, updateProducerDto);
@@ -58,7 +59,7 @@ export class ProducersController {
 
   @UseGuards(AuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.producersService.remove(+id);
+  remove(@Param() { id }: IdParamDTO) {
+    return this.producersService.remove(id);
   }
 }

@@ -47,14 +47,14 @@ export class ProducersService {
       .getMany();
   }
 
-  findOne(id: number): Promise<Producer> {
+  findOne(id: string): Promise<Producer> {
     return this.producersRepository.findOne(id, {
       relations: ['cropsPlanted'],
     });
   }
 
   async update(
-    id: number,
+    id: string,
     updateProducerDto: UpdateProducerDto,
   ): Promise<Producer> {
     let currentProducer = await this.producersRepository.findOne(id, {
@@ -108,7 +108,7 @@ export class ProducersService {
     return this.producersRepository.save(currentProducer);
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     await this.cropPlantedRepository.delete({ producer: { id } });
     return this.producersRepository.delete(id);
   }

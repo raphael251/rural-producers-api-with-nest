@@ -5,8 +5,8 @@ export type DocumentType = 'cpf' | 'cnpj';
 
 @Entity()
 export class Producer {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ type: 'varchar', length: 60 })
   name: string;

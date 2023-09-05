@@ -11,8 +11,8 @@ export enum CropType {
 
 @Entity()
 export class ProducerCropPlanted {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ type: 'enum', enum: CropType })
   cropPlanted: CropType;
