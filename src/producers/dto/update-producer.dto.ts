@@ -17,46 +17,46 @@ export class UpdateProducerDto {
   @IsNotEmpty()
   @IsOptional()
   @MaxLength(60)
-  @ApiProperty()
+  @ApiProperty({ required: false })
   name?: string;
 
   @ValidateNested({ each: true })
   @IsOptional()
   @Type(() => ProducerDocumentDto)
-  @ApiProperty()
+  @ApiProperty({ required: false })
   document?: ProducerDocumentDto;
 
   @IsNotEmpty()
   @IsOptional()
   @MaxLength(60)
-  @ApiProperty()
+  @ApiProperty({ required: false })
   farmName?: string;
 
   @IsNotEmpty()
   @IsOptional()
-  @ApiProperty()
+  @ApiProperty({ required: false })
   city?: string;
 
   @Length(2, 2)
   @IsNotEmpty()
   @IsOptional()
   @Validate(ProducerStateInitialsValidation)
-  @ApiProperty()
+  @ApiProperty({ required: false })
   stateInitials?: string;
 
   @IsNotEmpty()
   @IsOptional()
-  @ApiProperty()
+  @ApiProperty({ required: false })
   totalArea?: number;
 
   @IsNotEmpty()
   @IsOptional()
-  @ApiProperty()
+  @ApiProperty({ required: false })
   arableArea?: number;
 
   @IsNotEmpty()
   @IsOptional()
-  @ApiProperty()
+  @ApiProperty({ required: false })
   vegetationArea?: number;
 
   @IsNotEmpty()
@@ -65,6 +65,7 @@ export class UpdateProducerDto {
   @ApiProperty({
     enum: CropType,
     isArray: true,
+    required: false,
   })
   cropsPlanted?: Array<CropType>;
 }
