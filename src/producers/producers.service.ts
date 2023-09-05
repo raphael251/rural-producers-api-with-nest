@@ -41,18 +41,28 @@ export class ProducersService {
     return this.producersRepository.save(producer);
   }
 
-  findAll() {
-    return this.producersRepository.find({ relations: ['cropsPlanted'] });
+  async findAll() {
+    const allProducers = await this.producersRepository.find({
+      relations: ['cropsPlanted'],
+    });
+
+    return allProducers.map(({ cropsPlanted, ...producer }) => ({
+      ...producer,
+      cropsPlanted: cropsPlanted.reduce(
+        (prev, curr) => [...prev, curr.cropPlanted],
+        [],
+      ),
+    }));
   }
 
-  findByName(name: string): Promise<Array<Producer>> {
+  async findByName(name: string): Promise<Array<Producer>> {
     return this.producersRepository
       .createQueryBuilder('producer')
       .where('producer.name LIKE :name', { name: `%${name}%` })
       .getMany();
   }
 
-  findOne(id: string): Promise<Producer> {
+  async findOne(id: string): Promise<Producer> {
     return this.producersRepository.findOne(id, {
       relations: ['cropsPlanted'],
     });

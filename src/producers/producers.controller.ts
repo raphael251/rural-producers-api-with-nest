@@ -15,7 +15,8 @@ import { UpdateProducerDto } from './dto/update-producer.dto';
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '../auth/auth.guard';
 import { IdParamDTO } from './dto/id-param.dto';
-import { Producer } from './entities/producer.entity';
+import { ProducerDto } from './dto/producer.dto';
+import { producerDtoMapper } from './utils/producer-dto.mapper';
 
 @ApiTags('producers')
 @ApiBearerAuth()
@@ -32,28 +33,37 @@ export class ProducersController {
   @Post()
   async create(
     @Body() createProducerDto: CreateProducerDto,
-  ): Promise<Producer> {
-    return this.producersService.create(createProducerDto);
+  ): Promise<ProducerDto> {
+    const producer = await this.producersService.create(createProducerDto);
+
+    return producerDtoMapper(producer);
   }
 
   @Get()
   @ApiQuery({ name: 'name', required: false })
-  findAll(@Query('name') name?: string): Promise<Array<Producer>> {
-    if (name) return this.producersService.findByName(name);
-    return this.producersService.findAll();
+  async findAll(@Query('name') name?: string): Promise<Array<ProducerDto>> {
+    if (name) {
+      const producers = await this.producersService.findByName(name);
+      return producers.map(producerDtoMapper);
+    }
+
+    const producers = await this.producersService.findAll();
+    return producers.map(producerDtoMapper);
   }
 
   @Get(':id')
-  findOne(@Param() { id }: IdParamDTO): Promise<Producer> {
-    return this.producersService.findOne(id);
+  async findOne(@Param() { id }: IdParamDTO): Promise<ProducerDto> {
+    const producer = await this.producersService.findOne(id);
+    return producerDtoMapper(producer);
   }
 
   @Patch(':id')
-  update(
+  async update(
     @Param() { id }: IdParamDTO,
     @Body() updateProducerDto: UpdateProducerDto,
-  ): Promise<Producer> {
-    return this.producersService.update(id, updateProducerDto);
+  ): Promise<ProducerDto> {
+    const producer = await this.producersService.update(id, updateProducerDto);
+    return producerDtoMapper(producer);
   }
 
   @Delete(':id')
