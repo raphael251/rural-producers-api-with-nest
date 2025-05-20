@@ -63,7 +63,8 @@ export class ProducersService {
   }
 
   async findOne(id: string): Promise<Producer> {
-    return this.producersRepository.findOne(id, {
+    return this.producersRepository.findOne({
+      where: { id },
       relations: ['cropsPlanted'],
     });
   }
@@ -72,7 +73,8 @@ export class ProducersService {
     id: string,
     updateProducerDto: UpdateProducerDto,
   ): Promise<Producer> {
-    let currentProducer = await this.producersRepository.findOne(id, {
+    let currentProducer = await this.producersRepository.findOne({
+      where: { id },
       relations: ['cropsPlanted'],
     });
 
@@ -124,7 +126,7 @@ export class ProducersService {
   }
 
   async deleteOneById(id: string) {
-    const foundProducer = this.producersRepository.findOne(id);
+    const foundProducer = this.producersRepository.findOne({ where: { id } });
 
     if (!foundProducer) throw new NotFoundException('Producer not found.');
 
